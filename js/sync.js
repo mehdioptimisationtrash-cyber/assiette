@@ -62,7 +62,15 @@ async function request(method, body) {
     opts.body = JSON.stringify({ token, ...body });
     opts.headers = { 'Content-Type': 'text/plain;charset=utf-8' };
   }
-  const res = await fetch(target, opts);
+  let res;
+  try {
+    res = await fetch(target, opts);
+  } catch (err) {
+    if (!navigator.onLine) throw new Error('Pas de connexion internet');
+    if (err.name === 'TimeoutError') throw new Error('Google ne répond pas, réessaie');
+    // Google renvoie vers sa page de connexion quand le script n'est pas ouvert à « Tout le monde ».
+    throw new Error('Google refuse l’accès : dans Apps Script, le déploiement doit être réglé sur « Qui a accès : Tout le monde »');
+  }
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
   const data = await res.json();
   if (data?.ok !== true) throw new Error(data?.error === 'unauthorized' ? 'Code secret refusé' : data?.error || 'Réponse invalide');
