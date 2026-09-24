@@ -21,7 +21,7 @@ Chaque jour modifié est envoyé automatiquement dans une feuille Google (onglet
 
 1. Crée une feuille vide sur [sheets.google.com](https://sheets.google.com) (nom au choix, ex. « Assiette »).
 2. Menu **Extensions → Apps Script**. Efface le contenu, colle le code de [`apps-script/Code.gs`](apps-script/Code.gs).
-3. Remplace `COLLE_ICI_TON_CODE_SECRET` par un code secret de ton choix (lettres et chiffres, au moins 20 caractères). Enregistre (💾).
+3. Remplace `COLLE_ICI_TON_CODE_SECRET` par un code secret de ton choix (lettres et chiffres, au moins 20 caractères). Enregistre (💾). Tant que ce n'est pas fait, le script refuse tout.
 4. **Déployer → Nouveau déploiement** → roue dentée → **Application web**. Exécuter en tant que : **Moi**. Qui a accès : **Tout le monde**. → **Déployer**, puis autorise l'accès à ton compte (« Paramètres avancés » → « Accéder à… »).
 5. Copie l'**URL de l'application web** (elle finit par `/exec`).
 6. Dans Assiette : **Profil → Sauvegarde Google Sheets** : colle l'adresse et le code secret → **Brancher la feuille**.

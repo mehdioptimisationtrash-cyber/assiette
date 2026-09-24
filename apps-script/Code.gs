@@ -1,5 +1,5 @@
 /**
- * Assiette — script Google Apps Script (VERSION 1).
+ * Assiette — script Google Apps Script (VERSION 2).
  * À coller dans une feuille Google (Extensions → Apps Script), puis :
  *   Déployer → Nouveau déploiement → Type : Application web
  *   Exécuter en tant que : Moi · Qui a accès : Tout le monde → Déployer → copier l'URL (…/exec).
@@ -14,7 +14,14 @@
  * TOKEN = le « code secret » à saisir dans l'app (Profil → Google Sheets).
  */
 const TOKEN = 'COLLE_ICI_TON_CODE_SECRET';
-const VERSION = 1;
+const VERSION = 2;
+const PLACEHOLDER = 'COLLE_ICI_TON' + '_CODE_SECRET'; // découpé exprès : jamais égal à TOKEN par erreur
+
+// Refuse tout tant que le code secret n'a pas été choisi (sinon n'importe qui lisant le dépôt public entrerait).
+function checkToken(token) {
+  if (TOKEN === PLACEHOLDER || TOKEN.length < 16) return 'script_not_configured';
+  return token === TOKEN ? null : 'unauthorized';
+}
 const CELL_MAX = 45000; // une cellule Google Sheets contient au plus 50 000 caractères
 
 const DAYS_HEADER = ['date', 'kcal', 'protéines (g)', 'glucides (g)', 'lipides (g)', 'fibres (g)', 'eau (L)', 'poids (kg)',
@@ -23,7 +30,8 @@ const MEALS_HEADER = ['date', 'repas', 'aliment', 'marque', 'quantité (g)', 'kc
 const WEIGHTS_HEADER = ['date', 'poids (kg)'];
 
 function doGet(e) {
-  if (!e || !e.parameter || e.parameter.token !== TOKEN) return out({ ok: false, error: 'unauthorized' });
+  const refused = checkToken(e && e.parameter ? e.parameter.token : '');
+  if (refused) return out({ ok: false, error: refused });
   try {
     const ss = SpreadsheetApp.getActiveSpreadsheet();
     return out({ ok: true, v: VERSION, days: readDays(ss), weights: readWeights(ss), library: readLibrary(ss) });
@@ -35,7 +43,8 @@ function doGet(e) {
 function doPost(e) {
   let body;
   try { body = JSON.parse(e.postData.contents); } catch (err) { return out({ ok: false, error: 'bad json' }); }
-  if (!body || body.token !== TOKEN) return out({ ok: false, error: 'unauthorized' });
+  const refused = checkToken(body ? body.token : '');
+  if (refused) return out({ ok: false, error: refused });
   const lock = LockService.getScriptLock();
   lock.waitLock(20000);
   try {

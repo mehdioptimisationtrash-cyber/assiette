@@ -33,7 +33,7 @@ function loadScript() {
     Utilities: { formatDate: (d) => d.toISOString().slice(0, 10) },
   };
   vm.createContext(ctx);
-  const code = readFileSync(new URL('../apps-script/Code.gs', import.meta.url), 'utf8').replace(/const TOKEN = '[^']*'/, "const TOKEN = 'test'");
+  const code = readFileSync(new URL('../apps-script/Code.gs', import.meta.url), 'utf8').replace(/const TOKEN = '[^']*'/, "const TOKEN = 'test-code-assez-long'");
   vm.runInContext(code, ctx);
   return { ctx, sheets };
 }
@@ -45,7 +45,19 @@ const state = {
   water: { '2026-09-24': 750 }, notes: { '2026-09-24': { mood: 4, text: 'Bonne journée' } },
   weights: [{ date: '2026-09-24', kg: 111.4 }], favorites: [food], customFoods: [], recipes: [], recents: [food],
 };
-const post = (ctx, payload) => ctx.doPost({ postData: { contents: JSON.stringify({ token: 'test', ...payload }) } });
+const post = (ctx, payload) => ctx.doPost({ postData: { contents: JSON.stringify({ token: 'test-code-assez-long', ...payload }) } });
+
+test('le script refuse tout tant que le code secret n\'est pas choisi', () => {
+  const sheets = {};
+  const ss = { getSheetByName: (n) => sheets[n] ?? null, insertSheet: () => null, getSpreadsheetTimeZone: () => 'Europe/Paris' };
+  const ctx = {
+    SpreadsheetApp: { getActiveSpreadsheet: () => ss },
+    ContentService: { createTextOutput: (t) => ({ setMimeType: () => JSON.parse(t) }), MimeType: { JSON: 'json' } },
+  };
+  vm.createContext(ctx);
+  vm.runInContext(readFileSync(new URL('../apps-script/Code.gs', import.meta.url), 'utf8'), ctx);
+  assert.equal(ctx.doGet({ parameter: { token: 'COLLE_ICI_TON_CODE_SECRET' } }).error, 'script_not_configured');
+});
 
 test('le script refuse un mauvais code secret', () => {
   const { ctx } = loadScript();
@@ -64,7 +76,7 @@ test('aller-retour complet téléphone → feuille → téléphone', () => {
   assert.equal(jours[2][12], 'Bonne journée');
   assert.equal(sheets.repas.getLastRow(), 3);
 
-  const remote = ctx.doGet({ parameter: { token: 'test' } });
+  const remote = ctx.doGet({ parameter: { token: 'test-code-assez-long' } });
   const restored = fromRemote(remote);
   assert.deepEqual(restored.entries, state.entries);
   assert.deepEqual(restored.notes, state.notes);
@@ -92,6 +104,6 @@ test('une grosse bibliothèque est découpée puis recollée', () => {
   const { ctx } = loadScript();
   const big = { ...state, recents: Array.from({ length: 400 }, (_, i) => ({ ...food, id: `x${i}`, name: 'Aliment '.repeat(20) })) };
   post(ctx, buildPush(big, {}).payload);
-  const restored = fromRemote(ctx.doGet({ parameter: { token: 'test' } }));
+  const restored = fromRemote(ctx.doGet({ parameter: { token: 'test-code-assez-long' } }));
   assert.equal(restored.recents.length, 400);
 });

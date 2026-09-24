@@ -9,6 +9,10 @@ const SYNCED_KEY = 'assiette:synced';
 const DELAY_MS = 2500;
 const RETRY_MS = 30000;
 const TIMEOUT_MS = 25000;
+const SCRIPT_ERRORS = {
+  unauthorized: 'Code secret refusé : il doit être identique à celui écrit dans le script Google (ligne const TOKEN)',
+  script_not_configured: 'Le script Google n’a pas de code secret : remplace COLLE_ICI_TON_CODE_SECRET dans Apps Script, puis redéploie une nouvelle version',
+};
 const URL_PATTERN = /^https:\/\/script\.google\.com\/macros\/s\/[\w-]+\/exec$/;
 
 let timer = null;
@@ -73,7 +77,7 @@ async function request(method, body) {
   }
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
   const data = await res.json();
-  if (data?.ok !== true) throw new Error(data?.error === 'unauthorized' ? 'Code secret refusé' : data?.error || 'Réponse invalide');
+  if (data?.ok !== true) throw new Error(SCRIPT_ERRORS[data?.error] ?? data?.error ?? 'Réponse invalide');
   return data;
 }
 

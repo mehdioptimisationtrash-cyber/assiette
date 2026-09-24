@@ -12,7 +12,7 @@ PWA Safari (iPhone) de suivi alimentaire façon Foodvisor, sans framework ni ser
 | `index.html`, `css/app.css` | Page unique, style sobre clair/sombre, CSP |
 | `js/app.js` | Onglets (Journal / Ajouter / Progrès / Profil), onboarding si pas de profil |
 | `js/sync.js`, `js/sync-model.js` | Sauvegarde Google Sheets : envoi des seuls jours modifiés (empreintes), réessai hors ligne, restauration, choix au 1er branchement |
-| `apps-script/Code.gs` | Script Google (v1) : onglets jours / repas / poids / bibliotheque. Dépôt = code secret vide ; `Code.local.gs` (non versionné) = version de Mehdi |
+| `apps-script/Code.gs` | Script Google (v2, refuse tout si le code secret est encore le texte à remplacer) : onglets jours / repas / poids / bibliotheque. Dépôt = code secret vide ; `Code.local.gs` (non versionné) = version de Mehdi |
 | `js/store.js` | État + persistance localStorage (`assiette:v1`), mises à jour immuables, export/import |
 | `js/nutrition.js` | Calculs purs : BMR Mifflin-St Jeor, objectifs, sommes, score du jour, tendance poids |
 | `js/food-model.js` | Modèle d'aliment commun, conversion Ciqual / Open Food Facts, portions, recherche (score), recettes |
@@ -32,7 +32,7 @@ PWA Safari (iPhone) de suivi alimentaire façon Foodvisor, sans framework ni ser
 - 2026-09-24 : reconnaissance photo (API Claude) retirée à la demande de Mehdi (pas de clé d'API).
 - 2026-09-24 : publié sur GitHub Pages, vérifié en ligne (WebKit).
 - 2026-09-24 : notes du jour (humeur, faim, sommeil, texte), onglet Historique, sauvegarde Google Sheets. Testé à deux téléphones avec une fausse feuille (Playwright, service worker bloqué car il empêche l'interception).
-- 2026-09-24 : Mehdi ne voyait pas la carte Google Sheets (iPhone resté sur l'ancienne version, cache d'abord). Service worker passé en réseau d'abord + rechargement auto + numéro de version en bas du Profil (v7).
+- 2026-09-24 : Mehdi ne voyait pas la carte Google Sheets (iPhone resté sur l'ancienne version, cache d'abord). Service worker passé en réseau d'abord + rechargement auto + numéro de version en bas du Profil (v8).
 
 ## TODO
 - Mehdi crée la feuille Google + déploie le script, puis branche l'app (Profil).
