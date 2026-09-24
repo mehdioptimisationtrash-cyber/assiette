@@ -41,6 +41,19 @@ export const isConnected = () => URL_PATTERN.test(getConfig().url) && Boolean(ge
 // `ready` : l'utilisateur a choisi entre récupérer la feuille ou y envoyer le téléphone.
 export const isEnabled = () => isConnected() && getConfig().ready === true;
 export const isValidUrl = (url) => URL_PATTERN.test(url);
+
+/** Retire espaces, retours à la ligne et caractères invisibles (copier-coller depuis Notes). */
+export const cleanText = (text) => String(text ?? '').replace(/[\s\u200b-\u200f\u2060\ufeff]/g, '');
+
+/**
+ * Accepte l'adresse seule, ou « adresse#code » (une seule ligne à coller).
+ * Renvoie { url, token } nettoyés.
+ */
+export function parseConnection(urlInput, tokenInput) {
+  const raw = cleanText(urlInput);
+  const [url, fromUrl = ''] = raw.split('#');
+  return { url, token: cleanText(tokenInput) || fromUrl };
+}
 export const getStatus = () => status;
 
 export function onStatus(fn) {
@@ -127,7 +140,7 @@ function schedule() {
  * s'il y en a, l'app attend le choix de l'utilisateur (`chooseStart`) avant tout envoi.
  */
 export async function saveConfig(url, token) {
-  write(CONFIG_KEY, { url: url.trim(), token: token.trim(), ready: false });
+  write(CONFIG_KEY, { url: cleanText(url), token: cleanText(token), ready: false });
   write(SYNCED_KEY, null);
   let data;
   try {

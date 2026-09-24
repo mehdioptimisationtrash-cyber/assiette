@@ -65,3 +65,12 @@ test('buildRecipe ramène la recette à 100 g et calcule la part', () => {
   assert.equal(buildRecipe({ id: 'x', name: 'vide', servings: 1, ingredients: [] }), null);
   assert.equal(snapshot(r).recipe, undefined);
 });
+
+test('parseConnection accepte « adresse#code » et nettoie les caractères invisibles', async () => {
+  globalThis.localStorage ??= { getItem: () => null, setItem() {}, removeItem() {} };
+  const { parseConnection } = await import('../js/sync.js');
+  const url = 'https://script.google.com/macros/s/AKfy-cb_1/exec';
+  assert.deepEqual(parseConnection(` ${url}#abc123​ `, ''), { url, token: 'abc123' });
+  assert.deepEqual(parseConnection(url, ' abc123\n'), { url, token: 'abc123' });
+  assert.deepEqual(parseConnection(`${url}#ignoré`, 'prioritaire'), { url, token: 'prioritaire' });
+});

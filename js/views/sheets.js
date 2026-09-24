@@ -1,7 +1,7 @@
 // Réglage de la sauvegarde Google Sheets (dans Profil et sur l'écran d'accueil).
 
 import { h, toast } from '../ui.js';
-import { chooseStart, disconnect, flush, getConfig, getStatus, isConnected, isEnabled, isValidUrl, restoreFromSheet, saveConfig } from '../sync.js';
+import { chooseStart, disconnect, flush, getConfig, getStatus, isConnected, isEnabled, isValidUrl, parseConnection, restoreFromSheet, saveConfig } from '../sync.js';
 
 const HELP_URL = 'https://github.com/mehdioptimisationtrash-cyber/assiette#sauvegarde-google-sheets';
 
@@ -35,13 +35,16 @@ export function renderSheets({ onboarding = false } = {}) {
   ];
 
   const form = () => {
-    const url = h('input', { type: 'url', placeholder: 'https://script.google.com/macros/s/…/exec', autocomplete: 'off', value: getConfig().url });
-    const token = h('input', { type: 'password', placeholder: 'code secret', autocomplete: 'off', value: getConfig().token });
+    const noAuto = { autocomplete: 'off', autocapitalize: 'off', autocorrect: 'off', spellcheck: false };
+    const url = h('input', { type: 'url', placeholder: 'https://script.google.com/macros/s/…/exec', ...noAuto, value: getConfig().url });
+    const token = h('input', { type: 'text', placeholder: 'code secret (inutile si collé avec l’adresse)', ...noAuto, value: getConfig().token });
     const submit = (e) => {
       e.preventDefault();
-      if (!isValidUrl(url.value.trim())) return toast("L'adresse doit finir par /exec", 'error');
+      const conn = parseConnection(url.value, token.value);
+      if (!isValidUrl(conn.url)) return toast("L'adresse doit commencer par https://script.google.com/macros/s/ et finir par /exec", 'error');
+      if (!conn.token) return toast('Indique le code secret', 'error');
       run(async () => {
-        const days = await saveConfig(url.value, token.value);
+        const days = await saveConfig(conn.url, conn.token);
         return days ? null : 'Feuille branchée';
       });
     };
