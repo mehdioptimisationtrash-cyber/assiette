@@ -20,7 +20,7 @@ PWA Safari (iPhone) de suivi alimentaire façon Foodvisor, sans framework ni ser
 | `js/scanner.js` | Code-barres via ZXing (CDN jsdelivr, chargé au 1er scan) |
 | `js/views/*.js` | journal (+ Mes notes), history (Historique), sheets (réglage Google Sheets), add (recherche/scan/rapide), product (fiche), library (aliment perso, recette), progress, profile |
 | `data/ciqual.json` | 3 092 aliments Ciqual 2020, généré par `tools/build_ciqual.py` (kcal recalculées depuis macros si absentes) |
-| `sw.js` | Cache hors ligne — **bump `CACHE_VERSION` à chaque modif** |
+| `sw.js` | Hors ligne : fichiers de l'app en réseau d'abord (mises à jour immédiates), Ciqual + ZXing en cache d'abord. **Bump `CACHE_VERSION` + `js/version.js` à chaque modif** |
 | `tests/*.test.js` | `npm test` (node:test), 21 tests dont Code.gs exécuté dans une fausse feuille |
 
 ## Bases de données
@@ -32,6 +32,7 @@ PWA Safari (iPhone) de suivi alimentaire façon Foodvisor, sans framework ni ser
 - 2026-09-24 : reconnaissance photo (API Claude) retirée à la demande de Mehdi (pas de clé d'API).
 - 2026-09-24 : publié sur GitHub Pages, vérifié en ligne (WebKit).
 - 2026-09-24 : notes du jour (humeur, faim, sommeil, texte), onglet Historique, sauvegarde Google Sheets. Testé à deux téléphones avec une fausse feuille (Playwright, service worker bloqué car il empêche l'interception).
+- 2026-09-24 : Mehdi ne voyait pas la carte Google Sheets (iPhone resté sur l'ancienne version, cache d'abord). Service worker passé en réseau d'abord + rechargement auto + numéro de version en bas du Profil (v5).
 
 ## TODO
 - Mehdi crée la feuille Google + déploie le script, puis branche l'app (Profil).

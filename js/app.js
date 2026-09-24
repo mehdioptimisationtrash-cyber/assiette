@@ -82,5 +82,10 @@ startSync();
 loadCiqual().catch((err) => console.error(err));
 
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('sw.js').catch((err) => console.error('Service worker', err));
+  // Une nouvelle version vient de s'installer : on recharge une fois pour l'afficher.
+  const hadController = Boolean(navigator.serviceWorker.controller);
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    if (hadController) location.reload();
+  });
+  navigator.serviceWorker.register('sw.js').then((reg) => reg.update()).catch((err) => console.error('Service worker', err));
 }

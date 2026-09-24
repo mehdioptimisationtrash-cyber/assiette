@@ -4,6 +4,7 @@ import { h, fmt, isoDate, toast } from '../ui.js';
 import { ACTIVITY_LEVELS, GOALS, ageFrom, bmi, computeTargets } from '../nutrition.js';
 import { exportData, getState, importData, resetAll, saveProfile, saveTargets } from '../store.js';
 import { renderSheets } from './sheets.js';
+import { APP_VERSION } from '../version.js';
 
 const select = (options, value) =>
   h('select', {}, options.map((o) => h('option', { value: o.id, selected: o.id === value }, o.hint ? `${o.label} — ${o.hint}` : o.label)));
@@ -19,7 +20,7 @@ export function renderProfile({ onboarding = false } = {}) {
     onboarding ? null : renderTargets(targets),
     renderSheets({ onboarding }),
     onboarding ? null : renderBackup(),
-    h('p.muted', {}, 'Données : table Ciqual 2020 (ANSES) et Open Food Facts (licence ODbL). Assiette donne des repères, pas un avis médical.'),
+    h('p.muted', {}, `Version ${APP_VERSION} · Données : table Ciqual 2020 (ANSES) et Open Food Facts (licence ODbL). Assiette donne des repères, pas un avis médical.`),
   );
 }
 
