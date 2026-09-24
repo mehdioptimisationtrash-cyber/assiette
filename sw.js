@@ -1,13 +1,13 @@
 // Service worker : l'app et la table Ciqual fonctionnent hors ligne.
 // À chaque modification du site, augmenter CACHE_VERSION.
-const CACHE_VERSION = 'assiette-v2';
+const CACHE_VERSION = 'assiette-v4';
 const SHELL = [
   './', 'index.html', 'manifest.webmanifest', 'css/app.css', 'data/ciqual.json',
   'icons/icon.svg', 'icons/icon-180.png', 'icons/icon-512.png',
   'js/app.js', 'js/ui.js', 'js/store.js', 'js/nutrition.js', 'js/food-model.js', 'js/foods.js',
-  'js/scanner.js',
+  'js/scanner.js', 'js/sync.js', 'js/sync-model.js',
   'js/views/journal.js', 'js/views/add.js', 'js/views/product.js',
-  'js/views/library.js', 'js/views/progress.js', 'js/views/profile.js',
+  'js/views/library.js', 'js/views/history.js', 'js/views/sheets.js', 'js/views/progress.js', 'js/views/profile.js',
 ];
 const LIBS = ['https://cdn.jsdelivr.net/npm/@zxing/browser@0.1.5/umd/zxing-browser.min.js'];
 

@@ -6,11 +6,14 @@ import { loadCiqual } from './foods.js';
 import { renderJournal } from './views/journal.js';
 import { renderProgress } from './views/progress.js';
 import { renderProfile } from './views/profile.js';
+import { renderHistory } from './views/history.js';
+import { startSync } from './sync.js';
 import { openAdd } from './views/add.js';
 
 const TABS = [
   { id: 'journal', label: 'Journal', icon: '▤' },
   { id: 'add', label: 'Ajouter', icon: '＋' },
+  { id: 'history', label: 'Historique', icon: '☰' },
   { id: 'progress', label: 'Progrès', icon: '↗' },
   { id: 'profile', label: 'Profil', icon: '◎' },
 ];
@@ -32,6 +35,12 @@ function setDate(date) {
   render();
 }
 
+function openDay(date) {
+  current = { tab: 'journal', date };
+  render();
+  window.scrollTo(0, 0);
+}
+
 function setTab(tab) {
   if (tab === 'add') return openAdd(current.date, suggestedMeal());
   current = { ...current, tab };
@@ -45,6 +54,7 @@ function render() {
   nav.hidden = onboarding;
   let view;
   if (onboarding) view = renderProfile({ onboarding: true });
+  else if (current.tab === 'history') view = renderHistory(openDay);
   else if (current.tab === 'progress') view = renderProgress();
   else if (current.tab === 'profile') view = renderProfile();
   else view = renderJournal(current.date, setDate);
@@ -66,8 +76,9 @@ document.addEventListener('visibilitychange', () => {
   if (document.visibilityState === 'visible' && current.date < isoDate() && current.tab === 'journal') setDate(isoDate());
 });
 
-subscribe(render);
+subscribe((_state, meta) => { if (!meta?.quiet) render(); });
 render();
+startSync();
 loadCiqual().catch((err) => console.error(err));
 
 if ('serviceWorker' in navigator) {

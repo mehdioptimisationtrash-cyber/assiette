@@ -8,6 +8,7 @@ const EMPTY_STATE = Object.freeze({
   targets: null, // calculé depuis le profil, ajustable à la main
   entries: {}, // { 'YYYY-MM-DD': [{ id, meal, grams, food, at }] }
   water: {}, // { 'YYYY-MM-DD': ml }
+  notes: {}, // { 'YYYY-MM-DD': { mood, hunger, sleep, text } }
   weights: [], // [{ date, kg }] trié par date
   favorites: [], // [food]
   customFoods: [], // [food]
@@ -49,11 +50,14 @@ export function subscribe(fn) {
   return () => listeners.delete(fn);
 }
 
-/** Applique `updater(state) -> nouvel état`, sauvegarde et notifie. */
-export function update(updater) {
+/**
+ * Applique `updater(state) -> nouvel état`, sauvegarde et notifie.
+ * `meta.quiet` : l'écran n'a pas besoin d'être redessiné (saisie de texte en cours).
+ */
+export function update(updater, meta = {}) {
   state = updater(state);
   const saved = persist();
-  listeners.forEach((fn) => fn(state));
+  listeners.forEach((fn) => fn(state, meta));
   return saved;
 }
 
@@ -98,6 +102,12 @@ export function copyMeal(fromDate, toDate, meal) {
 function mergeRecents(recents, foods) {
   const ids = new Set(foods.map((f) => f.id));
   return [...[...foods].reverse(), ...recents.filter((f) => !ids.has(f.id))].slice(0, MAX_RECENTS);
+}
+
+// ——— Notes du jour ———
+
+export function saveNote(date, note, meta) {
+  return update((s) => ({ ...s, notes: { ...s.notes, [date]: { ...(s.notes?.[date] ?? {}), ...note } } }), meta);
 }
 
 // ——— Eau & poids ———
@@ -183,6 +193,11 @@ export function importData(json) {
   }
   const { settings, ...data } = parsed.data;
   return update(() => ({ ...EMPTY_STATE, ...data }));
+}
+
+/** Remplace les données par celles récupérées (Google Sheets), sans toucher au reste. */
+export function replaceData(data) {
+  return update((s) => ({ ...s, ...data }));
 }
 
 export function resetAll() {

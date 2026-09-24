@@ -1,3 +1,4 @@
 tools/raw/
 .DS_Store
 node_modules/
+apps-script/Code.local.gs

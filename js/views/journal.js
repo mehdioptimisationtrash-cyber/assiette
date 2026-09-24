@@ -1,12 +1,15 @@
-// Onglet Journal : résumé de la journée, repas, eau, bilan nutritionnel.
+// Onglet Journal : résumé de la journée, repas, eau, notes, bilan nutritionnel.
 
 import { h, fmt, bar, dateLabel, shiftDate, toast } from '../ui.js';
 import { MEALS, NUTRIENTS, dayScore, sumEntries, scale } from '../nutrition.js';
-import { addWater, copyMeal, getState, removeEntry, updateEntry } from '../store.js';
+import { addWater, copyMeal, getState, removeEntry, saveNote, updateEntry } from '../store.js';
 import { openAdd } from './add.js';
 import { openProduct } from './product.js';
 
 const WATER_STEP_ML = 250;
+const NOTE_SAVE_DELAY_MS = 600;
+export const MOODS = ['😣', '🙁', '😐', '🙂', '😄'];
+const HUNGER = ['Pas faim', 'Peu', 'Normale', 'Forte', 'Fringale'];
 
 export function renderJournal(date, setDate) {
   const { entries, targets, water } = getState();
@@ -48,7 +51,55 @@ export function renderJournal(date, setDate) {
         h('button.primary', { type: 'button', onclick: () => addWater(date, WATER_STEP_ML) }, '+ 1 verre (25 cl)'),
       ),
     ),
+    renderNotes(date, getState().notes?.[date] ?? {}),
     dayEntries.length ? renderBalance(totals, targets, score) : null,
+  );
+}
+
+/** Carte « Mes notes » : humeur, faim, sommeil, texte libre. */
+function renderNotes(date, note) {
+  const scale5 = (key, labels, title) =>
+    h(
+      'div.field',
+      { role: 'group', 'aria-label': title },
+      title,
+      h(
+        'div.chips',
+        {},
+        labels.map((label, i) =>
+          h(
+            'button.chip',
+            {
+              type: 'button',
+              'aria-pressed': note[key] === i + 1 ? 'true' : 'false',
+              onclick: () => saveNote(date, { [key]: note[key] === i + 1 ? null : i + 1 }),
+            },
+            label,
+          ),
+        ),
+      ),
+    );
+  const sleep = h('input', { type: 'text', inputMode: 'decimal', pattern: '[0-9]*[.,]?[0-9]*', placeholder: 'ex. 7,5', value: note.sleep != null ? String(note.sleep).replace('.', ',') : '' });
+  sleep.addEventListener('change', () => {
+    const hours = Number(sleep.value.replace(',', '.'));
+    saveNote(date, { sleep: sleep.value.trim() && hours >= 0 && hours <= 24 ? hours : null });
+  });
+  const text = h('textarea', { rows: 3, placeholder: 'Ressenti, écarts, resto, apéro, sport…', value: note.text ?? '' });
+  let timer = null;
+  // Enregistre sans redessiner l'écran pendant la frappe (sinon le clavier se fermerait).
+  text.addEventListener('input', () => {
+    clearTimeout(timer);
+    timer = setTimeout(() => saveNote(date, { text: text.value }, { quiet: true }), NOTE_SAVE_DELAY_MS);
+  });
+  text.addEventListener('blur', () => { clearTimeout(timer); saveNote(date, { text: text.value }, { quiet: true }); });
+  return h(
+    'section.card',
+    {},
+    h('h2', {}, 'Mes notes'),
+    scale5('mood', MOODS, 'Humeur'),
+    scale5('hunger', HUNGER, 'Faim'),
+    h('label.field', {}, 'Sommeil (heures)', sleep),
+    h('label.field', {}, 'Notes', text),
   );
 }
 

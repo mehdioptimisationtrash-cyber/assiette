@@ -1,8 +1,9 @@
-// Onglet Profil : informations personnelles, objectifs, sauvegarde. Sert aussi d'accueil.
+// Onglet Profil : informations personnelles, objectifs, Google Sheets, sauvegarde. Sert aussi d'accueil.
 
 import { h, fmt, isoDate, toast } from '../ui.js';
 import { ACTIVITY_LEVELS, GOALS, ageFrom, bmi, computeTargets } from '../nutrition.js';
 import { exportData, getState, importData, resetAll, saveProfile, saveTargets } from '../store.js';
+import { renderSheets } from './sheets.js';
 
 const select = (options, value) =>
   h('select', {}, options.map((o) => h('option', { value: o.id, selected: o.id === value }, o.hint ? `${o.label} — ${o.hint}` : o.label)));
@@ -16,6 +17,7 @@ export function renderProfile({ onboarding = false } = {}) {
     onboarding ? h('p', {}, 'Quelques informations pour calculer tes objectifs de calories et de protéines.') : null,
     renderProfileForm(profile, onboarding),
     onboarding ? null : renderTargets(targets),
+    renderSheets({ onboarding }),
     onboarding ? null : renderBackup(),
     h('p.muted', {}, 'Données : table Ciqual 2020 (ANSES) et Open Food Facts (licence ODbL). Assiette donne des repères, pas un avis médical.'),
   );
@@ -114,8 +116,8 @@ function renderBackup() {
   return h(
     'section.card.stack',
     {},
-    h('h2', {}, 'Sauvegarde'),
-    h('p.muted', {}, 'Les données sont stockées sur ce téléphone uniquement. Exporte-les de temps en temps (fichier à garder dans iCloud Drive).'),
+    h('h2', {}, 'Fichier de sauvegarde'),
+    h('p.muted', {}, 'Les données sont enregistrées dans Safari sur ce téléphone. En plus de Google Sheets, tu peux les exporter dans un fichier (à garder dans iCloud Drive).'),
     h('div.actions', {}, h('button', { type: 'button', onclick: download }, 'Exporter'), h('button', { type: 'button', onclick: () => file.click() }, 'Importer'), file),
     h('button.danger', { type: 'button', onclick: reset }, 'Tout effacer'),
   );

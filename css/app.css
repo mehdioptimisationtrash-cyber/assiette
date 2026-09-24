@@ -88,6 +88,17 @@ input, select {
   background: var(--card);
   color: var(--text);
 }
+textarea {
+  font: inherit;
+  font-size: 16px;
+  width: 100%;
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: var(--card);
+  color: var(--text);
+  resize: vertical;
+}
 input[type='checkbox'] { width: 22px; min-height: 22px; accent-color: var(--accent); }
 .field { display: flex; flex-direction: column; gap: 4px; font-size: 0.9rem; color: var(--muted); }
 .field > input, .field > select { color: var(--text); }
@@ -99,6 +110,7 @@ input[type='checkbox'] { width: 22px; min-height: 22px; accent-color: var(--acce
 .actions { display: flex; flex-wrap: wrap; gap: 8px; }
 .actions .action { flex: 1 1 30%; }
 .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip[aria-pressed='true'] { background: var(--accent); color: var(--accent-text); border-color: var(--accent); }
 .chip { min-height: 36px; padding: 4px 12px; border-radius: 999px; font-size: 0.9rem; }
 .qty { font-size: 1.4rem; font-weight: 700; }
 .qty-sm { width: 80px; }
@@ -111,6 +123,8 @@ input[type='checkbox'] { width: 22px; min-height: 22px; accent-color: var(--acce
 }
 .row-main { display: flex; flex-direction: column; min-width: 0; flex: 1; }
 .row-main > span:first-child { overflow-wrap: anywhere; }
+.note-line { color: var(--text); font-style: italic; overflow-wrap: anywhere; }
+a.link { color: var(--accent); }
 .row-side { white-space: nowrap; color: var(--muted); font-variant-numeric: tabular-nums; }
 .item-row { display: flex; align-items: center; gap: 10px; border-bottom: 1px solid var(--line); padding: 8px 0; }
 
@@ -171,7 +185,7 @@ body:has(.sheet) { overflow: hidden; }
 /* Onglets */
 .tabs {
   position: fixed; left: 0; right: 0; bottom: 0; z-index: 5;
-  display: grid; grid-template-columns: repeat(4, 1fr);
+  display: grid; grid-template-columns: repeat(5, 1fr);
   background: var(--card); border-top: 1px solid var(--line);
   padding-bottom: env(safe-area-inset-bottom);
 }
