@@ -2,6 +2,8 @@
 
 > Dernière analyse: 2026-09-24
 
+Site : https://mehdioptimisationtrash-cyber.github.io/assiette/ (repo GitHub `mehdioptimisationtrash-cyber/assiette`, Pages sur `main`).
+
 PWA Safari (iPhone) de suivi alimentaire façon Foodvisor, sans framework ni serveur, données en localStorage.
 
 ## Architecture & fichiers clés
@@ -26,7 +28,8 @@ PWA Safari (iPhone) de suivi alimentaire façon Foodvisor, sans framework ni ser
 ## Activité récente
 - 2026-09-24 : création complète, testée dans WebKit (Playwright) : onboarding, recherche, fiche, code-barres Nutella, eau, pesée, persistance.
 - 2026-09-24 : reconnaissance photo (API Claude) retirée à la demande de Mehdi (pas de clé d'API).
+- 2026-09-24 : publié sur GitHub Pages, vérifié en ligne (WebKit).
 
 ## TODO
-- Publier sur GitHub Pages (https requis pour la caméra) et installer sur l'iPhone.
+- Mehdi installe l'app sur l'iPhone (Safari → Partager → Sur l'écran d'accueil).
 - Option : synchro Google Sheets comme carnet-muscu.
