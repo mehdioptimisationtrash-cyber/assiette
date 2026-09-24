@@ -13,7 +13,6 @@ const EMPTY_STATE = Object.freeze({
   customFoods: [], // [food]
   recipes: [], // [food]
   recents: [], // [food]
-  settings: { apiKey: '', model: 'claude-opus-5' },
 });
 
 let state = load();
@@ -23,8 +22,8 @@ function load() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return EMPTY_STATE;
-    const saved = JSON.parse(raw);
-    return { ...EMPTY_STATE, ...saved, settings: { ...EMPTY_STATE.settings, ...saved.settings } };
+    const { settings, ...saved } = JSON.parse(raw); // `settings` : ancienne clé IA, retirée
+    return { ...EMPTY_STATE, ...saved };
   } catch (err) {
     console.error('Lecture des données impossible', err);
     return EMPTY_STATE;
@@ -171,15 +170,10 @@ export function saveTargets(targets) {
   return update((s) => ({ ...s, targets }));
 }
 
-export function saveSettings(changes) {
-  return update((s) => ({ ...s, settings: { ...s.settings, ...changes } }));
-}
-
 // ——— Sauvegarde / restauration ———
 
 export function exportData() {
-  const { settings, ...data } = state;
-  return JSON.stringify({ app: 'assiette', version: 1, exportedAt: new Date().toISOString(), data }, null, 2);
+  return JSON.stringify({ app: 'assiette', version: 1, exportedAt: new Date().toISOString(), data: state }, null, 2);
 }
 
 export function importData(json) {
@@ -187,7 +181,8 @@ export function importData(json) {
   if (parsed?.app !== 'assiette' || typeof parsed.data !== 'object') {
     throw new Error("Ce fichier n'est pas une sauvegarde Assiette.");
   }
-  return update((s) => ({ ...EMPTY_STATE, ...parsed.data, settings: s.settings }));
+  const { settings, ...data } = parsed.data;
+  return update(() => ({ ...EMPTY_STATE, ...data }));
 }
 
 export function resetAll() {

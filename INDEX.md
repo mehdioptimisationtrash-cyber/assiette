@@ -14,8 +14,7 @@ PWA Safari (iPhone) de suivi alimentaire façon Foodvisor, sans framework ni ser
 | `js/food-model.js` | Modèle d'aliment commun, conversion Ciqual / Open Food Facts, portions, recherche (score), recettes |
 | `js/foods.js` | Chargement Ciqual, recherche locale, API Open Food Facts (recherche + code-barres, 1 réessai sur 503) |
 | `js/scanner.js` | Code-barres via ZXing (CDN jsdelivr, chargé au 1er scan) |
-| `js/vision.js` | Photo → Claude (`claude-opus-5`, SDK via jsdelivr, sortie JSON structurée, fallbacks serveur) |
-| `js/views/*.js` | journal, add (recherche/scan/rapide), product (fiche), photo, library (aliment perso, recette), progress, profile |
+| `js/views/*.js` | journal, add (recherche/scan/rapide), product (fiche), library (aliment perso, recette), progress, profile |
 | `data/ciqual.json` | 3 092 aliments Ciqual 2020, généré par `tools/build_ciqual.py` (kcal recalculées depuis macros si absentes) |
 | `sw.js` | Cache hors ligne — **bump `CACHE_VERSION` à chaque modif** |
 | `tests/*.test.js` | `npm test` (node:test), 17 tests |
@@ -25,9 +24,9 @@ PWA Safari (iPhone) de suivi alimentaire façon Foodvisor, sans framework ni ser
 - Open Food Facts — `cgi/search.pl` (le nouveau `search.openfoodfacts.org` n'a pas d'en-tête CORS) et `api/v2/product/<code>.json`.
 
 ## Activité récente
-- 2026-09-24 : création complète, testée dans WebKit (Playwright) : onboarding, recherche, fiche, code-barres Nutella, eau, pesée, persistance. Appel Claude vérifié avec fausse clé (401 géré) ; analyse réelle non testée (pas de clé).
+- 2026-09-24 : création complète, testée dans WebKit (Playwright) : onboarding, recherche, fiche, code-barres Nutella, eau, pesée, persistance.
+- 2026-09-24 : reconnaissance photo (API Claude) retirée à la demande de Mehdi (pas de clé d'API).
 
 ## TODO
 - Publier sur GitHub Pages (https requis pour la caméra) et installer sur l'iPhone.
-- Tester une vraie photo avec la clé d'API de Mehdi.
 - Option : synchro Google Sheets comme carnet-muscu.

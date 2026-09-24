@@ -70,7 +70,7 @@ export function openRecipe(onCreated) {
       list.replaceChildren(
         ...items.map((it, i) =>
           h(
-            'div.photo-row',
+            'div.item-row',
             {},
             h('span.row-main', {}, it.food.name),
             h('label.inline', {}, h('input.qty-sm', { type: 'number', inputMode: 'numeric', value: String(it.grams), oninput: (e) => { items[i] = { ...it, grams: Number(e.target.value) || 0 }; paintTotal(); } }), ' g'),

@@ -112,7 +112,7 @@ input[type='checkbox'] { width: 22px; min-height: 22px; accent-color: var(--acce
 .row-main { display: flex; flex-direction: column; min-width: 0; flex: 1; }
 .row-main > span:first-child { overflow-wrap: anywhere; }
 .row-side { white-space: nowrap; color: var(--muted); font-variant-numeric: tabular-nums; }
-.photo-row { display: flex; align-items: center; gap: 10px; border-bottom: 1px solid var(--line); padding: 8px 0; }
+.item-row { display: flex; align-items: center; gap: 10px; border-bottom: 1px solid var(--line); padding: 8px 0; }
 
 /* Barres de progression */
 .bar { display: flex; flex-direction: column; gap: 4px; }
@@ -127,7 +127,6 @@ input[type='checkbox'] { width: 22px; min-height: 22px; accent-color: var(--acce
 
 /* Fiche produit */
 .product-img { width: 96px; height: 96px; object-fit: contain; border-radius: 10px; background: #fff; align-self: center; }
-.photo { width: 100%; border-radius: var(--radius); }
 .badges { display: flex; flex-wrap: wrap; gap: 6px; }
 .badges:empty { display: none; }
 .badge { padding: 3px 10px; border-radius: 999px; font-size: 0.8rem; font-weight: 700; color: #fff; }

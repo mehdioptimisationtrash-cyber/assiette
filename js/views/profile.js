@@ -1,8 +1,8 @@
-// Onglet Profil : informations personnelles, objectifs, clé IA, sauvegarde. Sert aussi d'accueil.
+// Onglet Profil : informations personnelles, objectifs, sauvegarde. Sert aussi d'accueil.
 
 import { h, fmt, isoDate, toast } from '../ui.js';
 import { ACTIVITY_LEVELS, GOALS, ageFrom, bmi, computeTargets } from '../nutrition.js';
-import { exportData, getState, importData, resetAll, saveProfile, saveSettings, saveTargets } from '../store.js';
+import { exportData, getState, importData, resetAll, saveProfile, saveTargets } from '../store.js';
 
 const select = (options, value) =>
   h('select', {}, options.map((o) => h('option', { value: o.id, selected: o.id === value }, o.hint ? `${o.label} — ${o.hint}` : o.label)));
@@ -16,7 +16,6 @@ export function renderProfile({ onboarding = false } = {}) {
     onboarding ? h('p', {}, 'Quelques informations pour calculer tes objectifs de calories et de protéines.') : null,
     renderProfileForm(profile, onboarding),
     onboarding ? null : renderTargets(targets),
-    onboarding ? null : renderAi(),
     onboarding ? null : renderBackup(),
     h('p.muted', {}, 'Données : table Ciqual 2020 (ANSES) et Open Food Facts (licence ODbL). Assiette donne des repères, pas un avis médical.'),
   );
@@ -86,24 +85,6 @@ function renderTargets(targets) {
     h('p.muted', {}, `Dépense estimée : ${fmt(targets.maintenance)} kcal/jour. Tu peux ajuster à la main.`),
     h('div.grid2', {}, fields.map(([k, label]) => h('label.field', {}, label, inputs[k]))),
     h('button', { type: 'submit' }, 'Enregistrer'),
-  );
-}
-
-function renderAi() {
-  const { settings } = getState();
-  const key = h('input', { type: 'password', autocomplete: 'off', placeholder: 'sk-ant-…', value: settings.apiKey });
-  const submit = (e) => {
-    e.preventDefault();
-    saveSettings({ apiKey: key.value.trim() });
-    toast(key.value.trim() ? 'Clé enregistrée' : 'Clé supprimée');
-  };
-  return h(
-    'form.card.stack',
-    { onsubmit: submit },
-    h('h2', {}, 'Reconnaissance photo (IA)'),
-    h('p.muted', {}, "Pour analyser une photo de repas, Assiette utilise Claude. Crée une clé sur console.anthropic.com (compte payant, environ 1 à 2 centimes par photo). La clé reste sur ce téléphone."),
-    h('label.field', {}, "Clé d'API Anthropic", key),
-    h('button', { type: 'submit' }, 'Enregistrer la clé'),
   );
 }
 

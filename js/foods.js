@@ -83,9 +83,3 @@ export async function getByBarcode(code) {
   if (data.status !== 1) return null;
   return fromOffProduct({ ...data.product, code: data.product.code ?? clean });
 }
-
-/** Meilleure correspondance CIQUAL pour un libellé (utilisé par la reconnaissance photo). */
-export async function bestLocalMatch(query) {
-  const [first] = await searchLocal(query, 1);
-  return first ?? null;
-}

@@ -1,4 +1,4 @@
-// Ajout d'aliments à un repas : recherche, code-barres, photo, saisie rapide, bibliothèque.
+// Ajout d'aliments à un repas : recherche, code-barres, saisie rapide, bibliothèque.
 
 import { h, fmt, openSheet, toast } from '../ui.js';
 import { MEALS } from '../nutrition.js';
@@ -7,7 +7,6 @@ import { snapshot } from '../food-model.js';
 import { addEntries, getState, uid } from '../store.js';
 import { startScan, explainCameraError } from '../scanner.js';
 import { openProduct } from './product.js';
-import { openPhoto } from './photo.js';
 import { openCustomFood, openRecipe } from './library.js';
 
 const SEARCH_DELAY_MS = 350;
@@ -53,7 +52,7 @@ function renderAdd(date, meal, close) {
       ...section('Mes recettes', recipes),
       ...section('Mes aliments', customFoods),
     );
-    if (!results.childElementCount) results.append(h('p.muted', {}, 'Tape le nom d’un aliment, scanne un code-barres ou prends une photo.'));
+    if (!results.childElementCount) results.append(h('p.muted', {}, 'Tape le nom d’un aliment, ou scanne un code-barres.'));
     offResults.replaceChildren();
   };
 
@@ -94,7 +93,6 @@ function renderAdd(date, meal, close) {
       'div.actions',
       {},
       h('button.action', { type: 'button', onclick: () => openScanner(onPick) }, '▦ Code-barres'),
-      h('button.action', { type: 'button', onclick: () => openPhoto(date, meal, close) }, '◉ Photo du repas'),
       h('button.action', { type: 'button', onclick: () => openQuickAdd(date, meal, close) }, '＋ Calories rapides'),
     ),
     input,

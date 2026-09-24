@@ -6,7 +6,6 @@
 - **Journal** par jour et par repas (petit-déj, déjeuner, dîner, collations), calories restantes, protéines / glucides / lipides, eau, « comme hier ».
 - **Recherche** : 3 092 aliments génériques de la table **Ciqual 2020 (ANSES)**, embarquée (marche hors ligne) + produits du commerce **Open Food Facts** (en ligne).
 - **Code-barres** avec la caméra (ou saisie des chiffres) → fiche Open Food Facts : Nutri-Score, NOVA, Éco-Score, allergènes, additifs, ingrédients.
-- **Photo du repas** : l'IA Claude reconnaît les aliments et estime les grammes, puis les relie à Ciqual ; tout est modifiable avant ajout. Nécessite une clé d'API Anthropic (Profil).
 - **Saisie rapide** de calories, **aliments perso**, **recettes** (calcul par part), **favoris** et **récents**.
 - **Bilan du jour** /100, conseils, fibres, sucres, sel, vitamines et minéraux.
 - **Progrès** : pesées, courbe, tendance kg/semaine, calories des 7 derniers jours.
