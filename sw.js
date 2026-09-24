@@ -1,7 +1,7 @@
 // Service worker : l'app et la table Ciqual fonctionnent hors ligne.
 // Fichiers de l'app : réseau d'abord (mises à jour immédiates), copie locale si hors ligne.
 // À chaque modification du site, augmenter CACHE_VERSION (et APP_VERSION dans js/version.js).
-const CACHE_VERSION = 'assiette-v5';
+const CACHE_VERSION = 'assiette-v6';
 const SHELL = [
   './', 'index.html', 'manifest.webmanifest', 'css/app.css', 'data/ciqual.json',
   'icons/icon.svg', 'icons/icon-180.png', 'icons/icon-512.png',

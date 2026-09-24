@@ -87,5 +87,5 @@ if ('serviceWorker' in navigator) {
   navigator.serviceWorker.addEventListener('controllerchange', () => {
     if (hadController) location.reload();
   });
-  navigator.serviceWorker.register('sw.js').then((reg) => reg.update()).catch((err) => console.error('Service worker', err));
+  navigator.serviceWorker.register('sw.js').then((reg) => reg?.update()).catch((err) => console.error('Service worker', err));
 }
