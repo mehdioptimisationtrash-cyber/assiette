@@ -33,8 +33,8 @@ PWA Safari (iPhone) de suivi alimentaire façon Foodvisor, sans framework ni ser
 - 2026-09-24 : publié sur GitHub Pages, vérifié en ligne (WebKit).
 - 2026-09-24 : notes du jour (humeur, faim, sommeil, texte), onglet Historique, sauvegarde Google Sheets. Testé à deux téléphones avec une fausse feuille (Playwright, service worker bloqué car il empêche l'interception).
 - 2026-09-24 : Mehdi ne voyait pas la carte Google Sheets (iPhone resté sur l'ancienne version, cache d'abord). Service worker passé en réseau d'abord + rechargement auto + numéro de version en bas du Profil (v9).
+- 2026-09-24 : feuille Google de Mehdi branchée et vérifiée (profil + 9 aliments du jour reçus). Causes des blocages rencontrés : déploiement pas en « Tout le monde », puis script collé avec le texte à remplacer au lieu du code. Son script est en v1 (fonctionne ; v2 n'ajoute que la garde « code non choisi »).
 
 ## TODO
-- Mehdi crée la feuille Google + déploie le script, puis branche l'app (Profil).
 - Mehdi installe l'app sur l'iPhone (Safari → Partager → Sur l'écran d'accueil).
 - Option : synchro Google Sheets comme carnet-muscu.
